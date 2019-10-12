@@ -1,0 +1,38 @@
+# To do
+- [ ] Implementation
+  - [x] Node.prototype
+    - [x] .appendChild(node)
+    - [x] .removeChild(node)
+    - [x] .contains(node)
+    - [x] .remove()
+    - [x] .realNode
+  - [x] Element.prototype
+    - [x] .setAttribute(key, value)
+    - [x] .removeAttribute(key)
+    - [x] .reconsile()
+    - [x] .realNode
+  - [x] Fragment.prototype
+    - [x] .reconsile()
+    - [x] .realNode
+  - [ ] Text.prototype
+    - [ ] .reconsile()
+    - [ ] .realNode
+- [ ] Review
+  - [ ] Review exposed API. Are more methods needed?
+  - [ ] Review #dirty conditions for Fragment agains API
+- [ ] Documentation
+  - [ ] Node.prototype
+    - [ ] .appendChild(node)
+    - [ ] .removeChild(node)
+    - [ ] .contains(node)
+    - [ ] .remove()
+    - [ ] .realNode
+  - [ ] Element.prototype
+    - [ ] .reconsile()
+    - [ ] .realNode
+  - [ ] Fragment.prototype
+    - [ ] .reconsile()
+    - [ ] .realNode
+  - [ ] Text.prototype
+    - [ ] .reconsile()
+    - [ ] .realNode
