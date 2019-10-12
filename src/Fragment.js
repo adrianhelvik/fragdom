@@ -13,14 +13,14 @@ class Fragment extends Node {
     this.#dirty = true
   }
 
-  reconsile() {
+  reconcile() {
     if (!this.#dirty) return
     this.#dirty = false
 
     const realNode = []
 
     for (let node of this.childNodes) {
-      node.reconsile()
+      node.reconcile()
       if (Array.isArray(node.realNode)) {
         realNode.push(...node.realNode)
       } else {

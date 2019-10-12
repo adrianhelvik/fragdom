@@ -10,12 +10,12 @@ describe('setAttribute(key, value)', () => {
   })
 })
 
-describe('[nonstandard] .reconsile()', () => {
+describe('[nonstandard] .reconcile()', () => {
   it('creates the real element', () => {
     const document = new Document()
     const element = document.createElement('div')
 
-    element.reconsile()
+    element.reconcile()
 
     expect(element.realNode).toBeInstanceOf(window.Element)
   })
@@ -24,9 +24,9 @@ describe('[nonstandard] .reconsile()', () => {
     const document = new Document()
     const element = document.createElement('div')
 
-    element.reconsile()
+    element.reconcile()
     const a = element.realNode
-    element.reconsile()
+    element.reconcile()
     const b = element.realNode
 
     expect(a).toBe(b)
@@ -38,7 +38,7 @@ describe('[nonstandard] .reconsile()', () => {
     const b = document.createElement('inner')
 
     a.appendChild(b)
-    a.reconsile()
+    a.reconcile()
 
     const element = a.realNode
 
@@ -51,9 +51,9 @@ describe('[nonstandard] .reconsile()', () => {
     const child = document.createElement('child')
 
     outer.appendChild(child)
-    outer.reconsile()
+    outer.reconcile()
     outer.removeChild(child)
-    outer.reconsile()
+    outer.reconcile()
 
     const element = outer.realNode
 
@@ -67,10 +67,10 @@ describe('[nonstandard] .reconsile()', () => {
     const after = document.createElement('after')
 
     outer.appendChild(before)
-    outer.reconsile()
+    outer.reconcile()
     outer.removeChild(before)
     outer.appendChild(after)
-    outer.reconsile()
+    outer.reconcile()
 
     const element = outer.realNode
 
@@ -83,11 +83,11 @@ describe('[nonstandard] .reconsile()', () => {
     const input = document.createElement('input')
 
     container.appendChild(input)
-    container.reconsile()
+    container.reconcile()
 
     input.realNode.focus()
 
-    container.reconsile()
+    container.reconcile()
 
     expect(window.document.activeElement).toBe(input.realNode)
   })
@@ -105,7 +105,7 @@ describe('[nonstandard] .reconsile()', () => {
     fragment.appendChild(b)
     fragment.appendChild(c)
 
-    container.reconsile()
+    container.reconcile()
 
     expect(container.realNode.innerHTML).toBe('<a></a><b></b><c></c>')
   })
@@ -122,9 +122,9 @@ describe('[nonstandard] .reconsile()', () => {
     fragment.appendChild(a)
     fragment.appendChild(b)
     fragment.appendChild(c)
-    container.reconsile()
+    container.reconcile()
     fragment.removeChild(b)
-    container.reconsile()
+    container.reconcile()
 
     expect(container.realNode.innerHTML).toBe('<a></a><c></c>')
   })
@@ -134,7 +134,7 @@ describe('[nonstandard] .reconsile()', () => {
     const element = document.createElement('div')
 
     element.setAttribute('class', 'foo')
-    element.reconsile()
+    element.reconcile()
 
     expect(element.realNode.getAttribute('class')).toBe('foo')
   })
@@ -144,9 +144,9 @@ describe('[nonstandard] .reconsile()', () => {
     const element = document.createElement('div')
 
     element.setAttribute('class', 'foo')
-    element.reconsile()
+    element.reconcile()
     element.removeAttribute('class')
-    element.reconsile()
+    element.reconcile()
 
     expect(element.realNode.getAttribute('class')).toBe(null)
   })
@@ -156,7 +156,7 @@ describe('[nonstandard] .reconsile()', () => {
     const element = document.createElement('div')
 
     element.setAttribute('$message', 'Hello world')
-    element.reconsile()
+    element.reconcile()
 
     expect(element.realNode.message).toBe('Hello world')
   })
@@ -166,9 +166,9 @@ describe('[nonstandard] .reconsile()', () => {
     const element = document.createElement('div')
 
     element.setAttribute('$message', 'Hello world')
-    element.reconsile()
+    element.reconcile()
     element.removeAttribute('$message')
-    element.reconsile()
+    element.reconcile()
 
     expect(element.realNode.message).toBe(null)
   })

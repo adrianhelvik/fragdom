@@ -10,7 +10,7 @@ class Node extends Unconstructable {
   get realNode() {
     if (!this.#realNode) {
       throw Error(
-        '[nonstandard] You must reconsile before getting the real node',
+        '[nonstandard] You must reconcile before getting the real node',
       )
     }
     return this.#realNode

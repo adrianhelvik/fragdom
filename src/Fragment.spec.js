@@ -1,8 +1,8 @@
 import Fragment from './Fragment.js'
 import Document from './Document.js'
 
-describe('reconsile', () => {
-  it('reconsiles all child nodes', () => {
+describe('reconcile', () => {
+  it('reconcile all child nodes', () => {
     const document = new Document()
     const fragment = document.createFragment()
     const a = document.createElement('a')
@@ -12,7 +12,7 @@ describe('reconsile', () => {
     fragment.appendChild(a)
     fragment.appendChild(b)
     fragment.appendChild(c)
-    fragment.reconsile()
+    fragment.reconcile()
 
     expect(fragment.realNode).toEqual([
       window.document.createElement('a'),
@@ -33,7 +33,7 @@ describe('reconsile', () => {
     fragment.appendChild(childFragment)
     childFragment.appendChild(b)
     childFragment.appendChild(c)
-    fragment.reconsile()
+    fragment.reconcile()
 
     expect(fragment.realNode).toEqual([
       window.document.createElement('a'),

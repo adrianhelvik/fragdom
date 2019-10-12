@@ -28,7 +28,7 @@ class Element extends Node {
     this.attributes[key] = null
   }
 
-  reconsile() {
+  reconcile() {
     const realNode =
       this.getPrivateRealNodeWithoutChecks() ||
       window.document.createElement(this.tagName)
@@ -50,7 +50,7 @@ class Element extends Node {
     let index = 0
 
     for (let i = 0; i < this.childNodes.length; i++) {
-      this.childNodes[i].reconsile()
+      this.childNodes[i].reconcile()
       const child = this.childNodes[i].realNode
 
       if (Array.isArray(child)) {

@@ -112,7 +112,7 @@ describe('remove', () => {
 describe('[nonstandard] .realNode', () => {
   it('throws without a realNode', () => {
     expect(() => new Node().realNode).toThrow(
-      '[nonstandard] You must reconsile before getting the real node',
+      '[nonstandard] You must reconcile before getting the real node',
     )
   })
 

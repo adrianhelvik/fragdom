@@ -9,13 +9,13 @@
   - [x] Element.prototype
     - [x] .setAttribute(key, value)
     - [x] .removeAttribute(key)
-    - [x] .reconsile()
+    - [x] .reconcile()
     - [x] .realNode
   - [x] Fragment.prototype
-    - [x] .reconsile()
+    - [x] .reconcile()
     - [x] .realNode
   - [ ] Text.prototype
-    - [ ] .reconsile()
+    - [ ] .reconcile()
     - [ ] .realNode
 - [ ] Review
   - [ ] Review exposed API. Are more methods needed?
@@ -28,11 +28,11 @@
     - [ ] .remove()
     - [ ] .realNode
   - [ ] Element.prototype
-    - [ ] .reconsile()
+    - [ ] .reconcile()
     - [ ] .realNode
   - [ ] Fragment.prototype
-    - [ ] .reconsile()
+    - [ ] .reconcile()
     - [ ] .realNode
   - [ ] Text.prototype
-    - [ ] .reconsile()
+    - [ ] .reconcile()
     - [ ] .realNode
