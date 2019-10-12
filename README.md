@@ -3,7 +3,7 @@ Fragdom is a thin wrapper around the DOM that adds fragment nodes.
 It is implemented in preparation for a virtual DOM library.
 
 The idea is that this should be able to be a replacement for the
-real DOM in virtual DOM implementations. Thus the API is a (non-strict) subset
+real DOM in virtual DOM implementations. Thus the API contains a subset
 of the real DOM API.
 
 ## Some differences from the real DOM
