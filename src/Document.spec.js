@@ -52,3 +52,27 @@ describe('createTextNode', () => {
     expect(text.textContent).toBe('Hello world')
   })
 })
+
+describe('wrap(element)', () => {
+  it('creates a virtual element', () => {
+    const realNode = window.document.createElement('div')
+    const node = document.wrap(realNode)
+
+    expect(node).toBeInstanceOf(Element)
+  })
+
+  it('assigns the correct tagName', () => {
+    const realNode = window.document.createElement('div')
+    const node = document.wrap(realNode)
+
+    expect(node.tagName).toBe('DIV')
+  })
+
+  it('sets all attributes', () => {
+    const realNode = window.document.createElement('div')
+    realNode.setAttribute('class', 'foo')
+    const node = document.wrap(realNode)
+
+    expect(node.attributes.class).toBe('foo')
+  })
+})

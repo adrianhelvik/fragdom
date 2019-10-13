@@ -14,12 +14,20 @@ class Element extends Node {
 
   set tagName(tagName) {}
 
-  constructor(tagName) {
+  constructor(arg) {
     super()
-    if (typeof tagName !== 'string') {
-      throw Error('[nonstandard] tagName must be a string')
+
+    if (arg && typeof arg === 'object' && arg instanceof window.Node) {
+      for (const { name, value } of arg.attributes) {
+        this.attributes[name] = value
+      }
+      this.#tagName = arg.tagName
+      this.setRealNodeAfterReconciliation(arg)
+    } else if (typeof arg === 'string') {
+      this.#tagName = arg.toUpperCase()
+    } else {
+      throw Error('[nonstandard] tagName must be a string or element')
     }
-    this.#tagName = tagName.toUpperCase()
   }
 
   getAttribute(key) {
