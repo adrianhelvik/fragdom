@@ -1,0 +1,53 @@
+<!doctype html>
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+<script type="module">
+import document from 'https://unpkg.com/@adrianhelvik/fragdom/src/index.js'
+
+const container = document.createElement('div')
+const title = document.createElement('h1')
+const input = document.createElement('input')
+const warning = document.createFragment()
+const warnText = document.createTextNode()
+
+input.setAttribute('$value', '')
+
+function render() {
+  title.textContent = 'Hello world'
+  input.setAttribute('placeholder', 'Enter something here')
+
+  container.appendChild(title)
+  container.appendChild(input)
+  container.appendChild(warning)
+  warning.appendChild(warnText)
+
+  if (input.getAttribute('$value').length > 5) {
+    const value = input.getAttribute('$value').slice(0, 10)
+    input.setAttribute('style', 'color: red')
+    input.setAttribute('$value', value)
+    warnText.textContent = `Your value is ${
+      value.length > 7 ? 'way ' : ''
+    }too long`
+    container.appendChild(warning)
+  } else {
+    input.removeAttribute('style')
+    warnText.textContent = ''
+  }
+
+  container.reconcile()
+}
+
+container.reconcile()
+
+window.document.body.appendChild(container.realNode)
+
+input.setAttribute('$oninput', event => {
+  input.setAttribute('$value', event.target.value)
+  render()
+})
+
+render()
+</script>
+</body>
