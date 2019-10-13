@@ -84,4 +84,13 @@ describe('reconcileAsync', () => {
       done()
     })
   })
+
+  it('can access the realNode of an empty fragment', () => {
+    const document = new Document()
+    const fragment = document.createFragment()
+
+    fragment.reconcile()
+
+    expect(() => fragment.realNode).not.toThrow()
+  })
 })

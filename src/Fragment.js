@@ -2,7 +2,7 @@ import Node from './Node.js'
 
 class Fragment extends Node {
   #animationFrame = null
-  #dirty = false
+  #dirty = true
 
   appendChild(...args) {
     super.appendChild(...args)
