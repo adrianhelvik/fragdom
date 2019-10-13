@@ -1,6 +1,7 @@
 import Node from './Node.js'
 
 class Text extends Node {
+  #animationFrame = null
   #value = null
 
   get textContent() {
@@ -16,7 +17,12 @@ class Text extends Node {
     this.#value = text
   }
 
-  reconsile() {
+  reconcile() {
+    if (this.#animationFrame) {
+      cancelAnimationFrame(this.#animationFrame)
+      this.#animationFrame = null
+    }
+
     const realNode =
       this.getPrivateRealNodeWithoutChecks() ||
       window.document.createTextNode(this.textContent)
@@ -25,7 +31,18 @@ class Text extends Node {
       realNode.textContent = this.textContent
     }
 
-    this.setRealNodeAfterReconsiliation(realNode)
+    this.setRealNodeAfterReconciliation(realNode)
+  }
+
+  reconcileAsync() {
+    if (this.#animationFrame != null) {
+      return
+    }
+
+    this.#animationFrame = requestAnimationFrame(() => {
+      this.#animationFrame = null
+      this.reconcile()
+    })
   }
 }
 

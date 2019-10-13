@@ -81,7 +81,7 @@ class Element extends Node {
       realNode.removeChild(realNode.childNodes[i])
     }
 
-    this.setRealNodeAfterReconsiliation(realNode)
+    this.setRealNodeAfterReconciliation(realNode)
   }
 }
 

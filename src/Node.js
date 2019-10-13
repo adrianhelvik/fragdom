@@ -20,7 +20,7 @@ class Node extends Unconstructable {
     return this.#realNode
   }
 
-  setRealNodeAfterReconsiliation(realNode) {
+  setRealNodeAfterReconciliation(realNode) {
     this.#realNode = realNode
   }
 

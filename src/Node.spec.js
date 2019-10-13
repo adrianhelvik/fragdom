@@ -120,7 +120,7 @@ describe('[nonstandard] .realNode', () => {
     expect(() => {
       const node = new Node()
       const element = window.document.createElement('div')
-      node.setRealNodeAfterReconsiliation(element)
+      node.setRealNodeAfterReconciliation(element)
       node.realNode
     }).not.toThrow()
   })
@@ -128,7 +128,7 @@ describe('[nonstandard] .realNode', () => {
   it('returns the real node', () => {
     const node = new Node()
     const element = window.document.createElement('div')
-    node.setRealNodeAfterReconsiliation(element)
+    node.setRealNodeAfterReconciliation(element)
     expect(node.realNode).toBe(element)
   })
 })

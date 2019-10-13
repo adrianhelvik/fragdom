@@ -19,14 +19,14 @@ you can call `.reconcileAsync()`.
 You can access the real DOM node by using the `.realNode` getter on
 Element and Text. On fragment nodes, realNode is an array.
 
-If the node has not been reconsiled, accessing this property throws
+If the node has not been reconciled, accessing this property throws
 an error.
 
 ### Instance attributes
 When setAttribute or removeAttribute is called with a key
 beginning with `$`, it is considered an instance attribute.
 
-This is to simplify reconsiliation of instance attributes.
+This is to simplify reconciliation of instance attributes.
 
 # Plan
 - [ ] Implementation
@@ -41,15 +41,15 @@ This is to simplify reconsiliation of instance attributes.
     - [x] .removeAttribute(key)
     - [x] .reconcile()
     - [x] .realNode
-    - [ ] .asyncReconcile()
+    - [ ] .reconcileAsync()
   - [ ] Fragment.prototype
     - [x] .reconcile()
     - [x] .realNode
-    - [ ] .asyncReconcile()
-  - [ ] Text.prototype
+    - [ ] .reconcileAsync()
+  - [x] Text.prototype
     - [x] .reconcile()
     - [x] .realNode
-    - [ ] .asyncReconcile()
+    - [x] .reconcileAsync()
 - [ ] Review
   - [ ] Review exposed API. Are more methods needed?
   - [ ] Review #dirty conditions for Fragment agains API

@@ -28,7 +28,7 @@ class Fragment extends Node {
       }
     }
 
-    this.setRealNodeAfterReconsiliation(realNode)
+    this.setRealNodeAfterReconciliation(realNode)
   }
 }
 
