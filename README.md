@@ -1,4 +1,4 @@
-# Abstract
+# @adrianhelvik/fragdom
 Fragdom is a thin wrapper around the DOM that adds fragment nodes.
 It is implemented in preparation for a virtual DOM library.
 
