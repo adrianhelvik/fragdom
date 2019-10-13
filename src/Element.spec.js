@@ -11,6 +11,16 @@ describe('setAttribute(key, value)', () => {
   })
 })
 
+describe('getAttribute(key)', () => {
+  it('retrieves the attribute', () => {
+    const document = new Document()
+    const element = document.createElement('div')
+    element.setAttribute('class', 'foo')
+
+    expect(element.getAttribute('class')).toEqual('foo')
+  })
+})
+
 describe('[nonstandard] .reconcile()', () => {
   it('creates the real element', () => {
     const document = new Document()

@@ -22,6 +22,10 @@ class Element extends Node {
     this.#tagName = tagName.toUpperCase()
   }
 
+  getAttribute(key) {
+    return this.attributes[key]
+  }
+
   setAttribute(key, value) {
     this.attributes[key] = value
   }
