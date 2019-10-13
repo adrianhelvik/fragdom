@@ -36,19 +36,19 @@ This is to simplify reconsiliation of instance attributes.
     - [x] .contains(node)
     - [x] .remove()
     - [x] .realNode
-  - [x] Element.prototype
+  - [ ] Element.prototype
     - [x] .setAttribute(key, value)
     - [x] .removeAttribute(key)
     - [x] .reconcile()
     - [x] .realNode
     - [ ] .asyncReconcile()
-  - [x] Fragment.prototype
+  - [ ] Fragment.prototype
     - [x] .reconcile()
     - [x] .realNode
     - [ ] .asyncReconcile()
   - [ ] Text.prototype
-    - [ ] .reconcile()
-    - [ ] .realNode
+    - [x] .reconcile()
+    - [x] .realNode
     - [ ] .asyncReconcile()
 - [ ] Review
   - [ ] Review exposed API. Are more methods needed?

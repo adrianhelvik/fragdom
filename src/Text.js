@@ -15,6 +15,18 @@ class Text extends Node {
     super()
     this.#value = text
   }
+
+  reconsile() {
+    const realNode =
+      this.getPrivateRealNodeWithoutChecks() ||
+      window.document.createTextNode(this.textContent)
+
+    if (realNode.textContent !== this.textContent) {
+      realNode.textContent = this.textContent
+    }
+
+    this.setRealNodeAfterReconsiliation(realNode)
+  }
 }
 
 export default Text
