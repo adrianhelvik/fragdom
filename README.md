@@ -1,4 +1,8 @@
 # @adrianhelvik/fragdom
+
+[![Build Status](https://travis-ci.org/adrianhelvik/fragdom.svg?branch=master)](https://travis-ci.org/adrianhelvik/fragdom)
+[![Coverage Status](https://coveralls.io/repos/github/adrianhelvik/fragdom/badge.svg)](https://coveralls.io/github/adrianhelvik/fragdom)
+
 Fragdom is a thin wrapper around the DOM that adds fragment nodes.
 It is implemented in preparation for a virtual DOM library.
 
