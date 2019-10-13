@@ -17,7 +17,8 @@
     "start": "jest --watch",
     "test": "jest --coverage",
     "build": "rm -r dist; babel src --out-dir dist",
-    "prepublish": "npm run test && npm run build"
+    "prepublish": "npm run test && npm run build",
+    "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "babel": {
     "presets": [
