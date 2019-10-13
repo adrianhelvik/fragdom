@@ -51,6 +51,18 @@ describe('appendChild', () => {
 
     expect(() => a.appendChild(b)).toThrow(message)
   })
+
+  it('removes an element from its previous parent', () => {
+    const parent1 = new Node()
+    const parent2 = new Node()
+    const child = new Node()
+
+    parent1.appendChild(child)
+    parent2.appendChild(child)
+
+    expect(parent1.childNodes).toEqual([])
+    expect(parent2.childNodes).toEqual([child])
+  })
 })
 
 describe('constains', () => {

@@ -39,6 +39,10 @@ class Node extends Unconstructable {
       }
     }
 
+    if (child.parentNode) {
+      child.remove()
+    }
+
     child.parentNode = this
     this.childNodes.push(child)
   }
