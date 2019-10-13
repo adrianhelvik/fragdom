@@ -75,4 +75,13 @@ describe('wrap(element)', () => {
 
     expect(node.attributes.class).toBe('foo')
   })
+
+  it('returns the same node for a given element', () => {
+    const realNode = window.document.createElement('div')
+
+    const a = document.wrap(realNode)
+    const b = document.wrap(realNode)
+
+    expect(a).toBe(b)
+  })
 })

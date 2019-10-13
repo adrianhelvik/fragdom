@@ -4,6 +4,8 @@ import Element from './Element.js'
 import Text from './Text.js'
 
 class Document {
+  #elementToNode = new WeakMap()
+
   createElement(type) {
     return withConstructor(() => new Element(type))
   }
@@ -16,10 +18,17 @@ class Document {
     return withConstructor(() => new Text(text))
   }
 
-  wrap(node) {
-    switch (node.nodeType) {
-      case window.Node.ELEMENT_NODE:
-        return withConstructor(() => new Element(node))
+  wrap(realNode) {
+    if (this.#elementToNode.has(realNode)) {
+      return this.#elementToNode.get(realNode)
+    }
+
+    switch (realNode.nodeType) {
+      case window.Node.ELEMENT_NODE: {
+        const node = withConstructor(() => new Element(realNode))
+        this.#elementToNode.set(realNode, node)
+        return node
+      }
       default:
         throw Error('Could not wrap node')
     }
