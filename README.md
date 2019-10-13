@@ -13,7 +13,7 @@ So the core difference with Fragdom is that you get
 `document.createFragment()`.
 
 *Note: The DOM is not extended in any way. You must manually
-create a Fragdom document*
+create a Fragdom document.*
 
 ## Some differences from the real DOM
 
