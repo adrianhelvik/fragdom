@@ -38,7 +38,11 @@ beginning with `$`, it is considered an instance attribute.
 
 This is to simplify reconciliation of instance attributes.
 
-# Plan
+## Example
+
+[https://unpkg.com/@adrianhelvik/fragdom/example.html](https://unpkg.com/@adrianhelvik/fragdom/example.html)
+
+## Plan
 - [x] Implementation
   - [x] Node.prototype
     - [x] .appendChild(node)
