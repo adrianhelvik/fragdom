@@ -1,3 +1,4 @@
+import { interceptMethod } from '../testUtils.js'
 import Document from './Document.js'
 
 describe('setAttribute(key, value)', () => {
@@ -171,5 +172,44 @@ describe('[nonstandard] .reconcile()', () => {
     element.reconcile()
 
     expect(element.realNode.message).toBe(null)
+  })
+})
+
+describe('[nonstandard] .reconcileAsync()', () => {
+  it('runs reconcile', done => {
+    const document = new Document()
+    const element = document.createElement('div')
+
+    interceptMethod(element, 'reconcile', () => done())
+    element.reconcileAsync()
+  })
+
+  it('runs reconcile after an animation frame', done => {
+    const document = new Document()
+    const element = document.createElement('div')
+    element.reconcileAsync()
+    requestAnimationFrame(() => {
+      expect(element.realNode).toEqual(window.document.createElement('div'))
+      done()
+    })
+  })
+
+  it('cancels reconcileAsync when running reconcile', done => {
+    const document = new Document()
+    const element = document.createElement('div')
+
+    let calls = 0
+
+    interceptMethod(element, 'reconcile', () => {
+      calls += 1
+    })
+
+    element.reconcileAsync()
+    element.reconcile()
+
+    requestAnimationFrame(() => {
+      expect(calls).toBe(1)
+      done()
+    })
   })
 })

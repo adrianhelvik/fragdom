@@ -4,6 +4,8 @@ let instancePrefix = '$'
 
 class Element extends Node {
   attributes = {}
+
+  #animationFrame = null
   #tagName = null
 
   get tagName() {
@@ -29,6 +31,11 @@ class Element extends Node {
   }
 
   reconcile() {
+    if (this.#animationFrame) {
+      cancelAnimationFrame(this.#animationFrame)
+      this.#animationFrame = null
+    }
+
     const realNode =
       this.getPrivateRealNodeWithoutChecks() ||
       window.document.createElement(this.tagName)
@@ -82,6 +89,17 @@ class Element extends Node {
     }
 
     this.setRealNodeAfterReconciliation(realNode)
+  }
+
+  reconcileAsync() {
+    if (this.#animationFrame != null) {
+      return
+    }
+
+    this.#animationFrame = requestAnimationFrame(() => {
+      this.#animationFrame = null
+      this.reconcile()
+    })
   }
 }
 

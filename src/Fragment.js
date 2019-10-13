@@ -1,6 +1,7 @@
 import Node from './Node.js'
 
 class Fragment extends Node {
+  #animationFrame = null
   #dirty = false
 
   appendChild(...args) {
@@ -14,7 +15,15 @@ class Fragment extends Node {
   }
 
   reconcile() {
-    if (!this.#dirty) return
+    if (this.#animationFrame != null) {
+      cancelAnimationFrame(this.#animationFrame)
+      this.#animationFrame = null
+    }
+
+    if (!this.#dirty) {
+      return
+    }
+
     this.#dirty = false
 
     const realNode = []
@@ -29,6 +38,17 @@ class Fragment extends Node {
     }
 
     this.setRealNodeAfterReconciliation(realNode)
+  }
+
+  reconcileAsync() {
+    if (this.#animationFrame != null) {
+      return
+    }
+
+    this.#animationFrame = requestAnimationFrame(() => {
+      this.#animationFrame = null
+      this.reconcile()
+    })
   }
 }
 

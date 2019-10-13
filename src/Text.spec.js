@@ -1,3 +1,4 @@
+import { interceptMethod } from '../testUtils.js'
 import Document from './Document.js'
 import Text from './Text.js'
 
@@ -48,6 +49,25 @@ describe('.reconcileAsync', () => {
     expect(text.realNode.textContent).toBe('Hello world')
     requestAnimationFrame(() => {
       expect(text.realNode.textContent).toBe('Foo bar')
+      done()
+    })
+  })
+
+  it('cancels reconcileAsync when running reconcile', done => {
+    const document = new Document()
+    const text = document.createTextNode('Hello world')
+
+    let calls = 0
+
+    interceptMethod(text, 'reconcile', () => {
+      calls += 1
+    })
+
+    text.reconcileAsync()
+    text.reconcile()
+
+    requestAnimationFrame(() => {
+      expect(calls).toBe(1)
       done()
     })
   })

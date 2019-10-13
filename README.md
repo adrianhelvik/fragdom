@@ -29,23 +29,23 @@ beginning with `$`, it is considered an instance attribute.
 This is to simplify reconciliation of instance attributes.
 
 # Plan
-- [ ] Implementation
+- [x] Implementation
   - [x] Node.prototype
     - [x] .appendChild(node)
     - [x] .removeChild(node)
     - [x] .contains(node)
     - [x] .remove()
     - [x] .realNode
-  - [ ] Element.prototype
+  - [x] Element.prototype
     - [x] .setAttribute(key, value)
     - [x] .removeAttribute(key)
     - [x] .reconcile()
     - [x] .realNode
-    - [ ] .reconcileAsync()
-  - [ ] Fragment.prototype
+    - [x] .reconcileAsync()
+  - [x] Fragment.prototype
     - [x] .reconcile()
     - [x] .realNode
-    - [ ] .reconcileAsync()
+    - [x] .reconcileAsync()
   - [x] Text.prototype
     - [x] .reconcile()
     - [x] .realNode
