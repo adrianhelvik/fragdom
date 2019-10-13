@@ -2,9 +2,18 @@
 Fragdom is a thin wrapper around the DOM that adds fragment nodes.
 It is implemented in preparation for a virtual DOM library.
 
-The idea is that this should be able to be a replacement for the
-real DOM in virtual DOM implementations. Thus the API contains a subset
-of the real DOM API.
+The idea is that you should be able to replace usage of the real DOM
+with this library and get the addition of fragment nodes.
+
+With normal DOM, you can create document fragments, but these do not
+become child nodes of an element they are inserted into. Instead
+the child nodes are moved to the new element.
+
+So the core difference with Fragdom is that you get
+`document.createFragment()`.
+
+*Note: The DOM is not extended in any way. You must manually
+create a Fragdom document*
 
 ## Some differences from the real DOM
 
