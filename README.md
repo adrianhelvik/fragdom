@@ -53,6 +53,7 @@ This is to simplify reconciliation of instance attributes.
 - [ ] Review
   - [ ] Review exposed API. Are more methods needed?
   - [ ] Review #dirty conditions for Fragment agains API
+  - [ ] Review error conditions
 - [ ] Documentation
   - [ ] Node.prototype
     - [ ] .appendChild(node)
