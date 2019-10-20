@@ -14,11 +14,8 @@ become child nodes of an element they are inserted into. Instead
 the child nodes are moved to the new element.
 
 The core differences with Fragdom is that you get
-`document.createFragment()` and that DOM updates don't take effect
+`fragdom.createFragment()` and that DOM updates don't take effect
 before you call `.reconcile()` on an element (or one of its parents).
-
-*Note: The DOM is not extended in any way. You must manually
-create a Fragdom document.*
 
 ## Some differences from the real DOM
 
