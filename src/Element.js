@@ -14,7 +14,7 @@ class Element extends Node {
 
   set tagName(tagName) {}
 
-  constructor(arg) {
+  constructor(arg, fragdom) {
     super()
 
     if (arg && typeof arg === 'object' && arg instanceof window.Node) {
@@ -23,6 +23,9 @@ class Element extends Node {
       }
       this.#tagName = arg.tagName
       this.setRealNodeAfterReconciliation(arg)
+      if (arg.parentNode) {
+        this.parentNode = fragdom.wrap(arg.parentNode)
+      }
     } else if (typeof arg === 'string') {
       this.#tagName = arg.toUpperCase()
     } else {

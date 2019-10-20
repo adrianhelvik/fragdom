@@ -1,10 +1,9 @@
 import { interceptMethod } from '../testUtils.js'
-import Document from './Document.js'
+import fragdom from '.'
 
 describe('setAttribute(key, value)', () => {
   it('updates .attributes', () => {
-    const document = new Document()
-    const element = document.createElement('div')
+    const element = fragdom.createElement('div')
     element.setAttribute('class', 'foo')
 
     expect(element.attributes).toEqual({ class: 'foo' })
@@ -13,8 +12,7 @@ describe('setAttribute(key, value)', () => {
 
 describe('getAttribute(key)', () => {
   it('retrieves the attribute', () => {
-    const document = new Document()
-    const element = document.createElement('div')
+    const element = fragdom.createElement('div')
     element.setAttribute('class', 'foo')
 
     expect(element.getAttribute('class')).toEqual('foo')
@@ -23,8 +21,7 @@ describe('getAttribute(key)', () => {
 
 describe('[nonstandard] .reconcile()', () => {
   it('creates the real element', () => {
-    const document = new Document()
-    const element = document.createElement('div')
+    const element = fragdom.createElement('div')
 
     element.reconcile()
 
@@ -32,8 +29,7 @@ describe('[nonstandard] .reconcile()', () => {
   })
 
   it('does not create a new element the second time', () => {
-    const document = new Document()
-    const element = document.createElement('div')
+    const element = fragdom.createElement('div')
 
     element.reconcile()
     const a = element.realNode
@@ -44,9 +40,8 @@ describe('[nonstandard] .reconcile()', () => {
   })
 
   it('appends all element children', () => {
-    const document = new Document()
-    const a = document.createElement('outer')
-    const b = document.createElement('inner')
+    const a = fragdom.createElement('outer')
+    const b = fragdom.createElement('inner')
 
     a.appendChild(b)
     a.reconcile()
@@ -57,9 +52,8 @@ describe('[nonstandard] .reconcile()', () => {
   })
 
   it('can remove children', () => {
-    const document = new Document()
-    const outer = document.createElement('outer')
-    const child = document.createElement('child')
+    const outer = fragdom.createElement('outer')
+    const child = fragdom.createElement('child')
 
     outer.appendChild(child)
     outer.reconcile()
@@ -72,10 +66,9 @@ describe('[nonstandard] .reconcile()', () => {
   })
 
   it('can replace children', () => {
-    const document = new Document()
-    const outer = document.createElement('outer')
-    const before = document.createElement('before')
-    const after = document.createElement('after')
+    const outer = fragdom.createElement('outer')
+    const before = fragdom.createElement('before')
+    const after = fragdom.createElement('after')
 
     outer.appendChild(before)
     outer.reconcile()
@@ -89,9 +82,8 @@ describe('[nonstandard] .reconcile()', () => {
   })
 
   it("retains focus when a child isn't (re-/)moved", () => {
-    const document = new Document()
-    const container = document.createElement('container')
-    const input = document.createElement('input')
+    const container = fragdom.createElement('container')
+    const input = fragdom.createElement('input')
 
     container.appendChild(input)
     container.reconcile()
@@ -104,12 +96,11 @@ describe('[nonstandard] .reconcile()', () => {
   })
 
   it('can add fragments', () => {
-    const document = new Document()
-    const container = document.createElement('container')
-    const fragment = document.createFragment()
-    const a = document.createElement('a')
-    const b = document.createElement('b')
-    const c = document.createElement('c')
+    const container = fragdom.createElement('container')
+    const fragment = fragdom.createFragment()
+    const a = fragdom.createElement('a')
+    const b = fragdom.createElement('b')
+    const c = fragdom.createElement('c')
 
     container.appendChild(fragment)
     fragment.appendChild(a)
@@ -122,12 +113,11 @@ describe('[nonstandard] .reconcile()', () => {
   })
 
   it('can remove fragments', () => {
-    const document = new Document()
-    const container = document.createElement('container')
-    const fragment = document.createFragment()
-    const a = document.createElement('a')
-    const b = document.createElement('b')
-    const c = document.createElement('c')
+    const container = fragdom.createElement('container')
+    const fragment = fragdom.createFragment()
+    const a = fragdom.createElement('a')
+    const b = fragdom.createElement('b')
+    const c = fragdom.createElement('c')
 
     container.appendChild(fragment)
     fragment.appendChild(a)
@@ -141,8 +131,7 @@ describe('[nonstandard] .reconcile()', () => {
   })
 
   it('can add attributes', () => {
-    const document = new Document()
-    const element = document.createElement('div')
+    const element = fragdom.createElement('div')
 
     element.setAttribute('class', 'foo')
     element.reconcile()
@@ -151,8 +140,7 @@ describe('[nonstandard] .reconcile()', () => {
   })
 
   it('can remove attributes', () => {
-    const document = new Document()
-    const element = document.createElement('div')
+    const element = fragdom.createElement('div')
 
     element.setAttribute('class', 'foo')
     element.reconcile()
@@ -163,8 +151,7 @@ describe('[nonstandard] .reconcile()', () => {
   })
 
   it('can add instance attributes', () => {
-    const document = new Document()
-    const element = document.createElement('div')
+    const element = fragdom.createElement('div')
 
     element.setAttribute('$message', 'Hello world')
     element.reconcile()
@@ -173,8 +160,7 @@ describe('[nonstandard] .reconcile()', () => {
   })
 
   it('can remove attributes', () => {
-    const document = new Document()
-    const element = document.createElement('div')
+    const element = fragdom.createElement('div')
 
     element.setAttribute('$message', 'Hello world')
     element.reconcile()
@@ -187,16 +173,14 @@ describe('[nonstandard] .reconcile()', () => {
 
 describe('[nonstandard] .reconcileAsync()', () => {
   it('runs reconcile', done => {
-    const document = new Document()
-    const element = document.createElement('div')
+    const element = fragdom.createElement('div')
 
     interceptMethod(element, 'reconcile', () => done())
     element.reconcileAsync()
   })
 
   it('runs reconcile after an animation frame', done => {
-    const document = new Document()
-    const element = document.createElement('div')
+    const element = fragdom.createElement('div')
     element.reconcileAsync()
     requestAnimationFrame(() => {
       expect(element.realNode).toEqual(window.document.createElement('div'))
@@ -205,8 +189,7 @@ describe('[nonstandard] .reconcileAsync()', () => {
   })
 
   it('cancels reconcileAsync when running reconcile', done => {
-    const document = new Document()
-    const element = document.createElement('div')
+    const element = fragdom.createElement('div')
 
     let calls = 0
 
@@ -222,4 +205,15 @@ describe('[nonstandard] .reconcileAsync()', () => {
       done()
     })
   })
+})
+
+it('sets the parentNode from the existing element', () => {
+  const outer = document.createElement('outer')
+  const inner = document.createElement('inner')
+
+  outer.appendChild(inner)
+
+  const wrappedInner = fragdom.wrap(inner)
+
+  expect(wrappedInner.parentNode).toBe(fragdom.wrap(outer))
 })

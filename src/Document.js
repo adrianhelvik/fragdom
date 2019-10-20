@@ -7,7 +7,7 @@ class Document {
   #elementToNode = new WeakMap()
 
   createElement(type) {
-    return withConstructor(() => new Element(type))
+    return withConstructor(() => new Element(type, this))
   }
 
   createFragment() {
@@ -25,7 +25,7 @@ class Document {
 
     switch (realNode.nodeType) {
       case window.Node.ELEMENT_NODE: {
-        const node = withConstructor(() => new Element(realNode))
+        const node = withConstructor(() => new Element(realNode, this))
         this.#elementToNode.set(realNode, node)
         return node
       }
