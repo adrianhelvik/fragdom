@@ -39,14 +39,8 @@ class Fragment extends Node {
 
     this.setRealNodeAfterReconciliation(realNode)
 
-    let parentNode = this.parentNode
-
-    while (parentNode instanceof Fragment) {
-      parentNode = parentNode.parentNode
-    }
-
-    if (parentNode) {
-      parentNode.reconcile()
+    if (this.parentNode) {
+      this.parentNode.reconcile()
     }
   }
 

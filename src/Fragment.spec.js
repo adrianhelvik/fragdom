@@ -1,6 +1,11 @@
 import { interceptMethod } from '../testUtils.js'
 import Fragment from './Fragment.js'
 import fragdom from '.'
+import h from './h'
+
+beforeEach(() => {
+  document.body.innerHTML = ''
+})
 
 describe('reconcile', () => {
   it('reconcile all child nodes', () => {
@@ -15,9 +20,9 @@ describe('reconcile', () => {
     fragment.reconcile()
 
     expect(fragment.realNode).toEqual([
-      window.document.createElement('a'),
-      window.document.createElement('b'),
-      window.document.createElement('c'),
+      document.createElement('a'),
+      document.createElement('b'),
+      document.createElement('c'),
     ])
   })
 
@@ -35,13 +40,13 @@ describe('reconcile', () => {
     fragment.reconcile()
 
     expect(fragment.realNode).toEqual([
-      window.document.createElement('a'),
-      window.document.createElement('b'),
-      window.document.createElement('c'),
+      document.createElement('a'),
+      document.createElement('b'),
+      document.createElement('c'),
     ])
   })
 
-  it('triggers a reconciliation in the closest non-fragment parent', done => {
+  it('triggers a reconciliation in the closest non-fragment parent', () => {
     const a = fragdom.createElement('div')
     const b = fragdom.createFragment()
     const c = fragdom.createFragment()
@@ -51,9 +56,44 @@ describe('reconcile', () => {
     b.appendChild(c)
     c.appendChild(d)
 
-    a.reconcile = done
+    let success = false
+
+    a.reconcile = () => {
+      success = true
+    }
 
     c.reconcile()
+
+    expect(success).toBe(true)
+  })
+
+  it('can access the realNode of an empty fragment', () => {
+    const fragment = fragdom.createFragment()
+
+    fragment.reconcile()
+
+    expect(() => fragment.realNode).not.toThrow()
+  })
+
+  test('bugfix: Reconciliation would throw for an appended fragment', () => {
+    const node = (
+      <>
+        <h1>Hello world</h1>
+        Foo <>bar</>
+        <b>Baz</b>
+      </>
+    )
+
+    const container = document.createElement('div')
+
+    document.body.appendChild(container)
+
+    fragdom.wrap(container).appendChild(node)
+    expect(() => {
+      fragdom.wrap(container).reconcile()
+    }).not.toThrow()
+
+    expect(container.innerHTML).toBe('<h1>Hello world</h1>Foo bar<b>Baz</b>')
   })
 })
 
@@ -72,7 +112,7 @@ describe('reconcileAsync', () => {
     fragment.reconcileAsync()
 
     requestAnimationFrame(() => {
-      expect(fragment.realNode).toEqual([window.document.createElement('div')])
+      expect(fragment.realNode).toEqual([document.createElement('div')])
       done()
     })
   })
@@ -93,13 +133,5 @@ describe('reconcileAsync', () => {
       expect(calls).toBe(1)
       done()
     })
-  })
-
-  it('can access the realNode of an empty fragment', () => {
-    const fragment = fragdom.createFragment()
-
-    fragment.reconcile()
-
-    expect(() => fragment.realNode).not.toThrow()
   })
 })

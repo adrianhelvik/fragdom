@@ -1,6 +1,6 @@
 {
   "name": "@adrianhelvik/fragdom",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "main": "dist/index.js",
   "module": "src/index.js",
   "license": "MIT",
@@ -22,10 +22,17 @@
   },
   "babel": {
     "presets": [
-      "@babel/preset-env"
+      "@babel/preset-env",
+      ["@babel/preset-react", {
+        "pragma": "h",
+        "pragmaFrag": "h.Fragment"
+      }]
     ],
     "plugins": [
       "@babel/plugin-proposal-class-properties"
     ]
+  },
+  "dependencies": {
+    "@babel/preset-react": "^7.6.3"
   }
 }

@@ -1,5 +1,5 @@
 import { interceptMethod } from '../testUtils.js'
-import fragdom from '.'
+import fragdom from './fragdom.js'
 
 describe('setAttribute(key, value)', () => {
   it('updates .attributes', () => {
