@@ -1,14 +1,13 @@
 import { interceptMethod } from '../testUtils.js'
 import Fragment from './Fragment.js'
-import Document from './Document.js'
+import fragdom from '.'
 
 describe('reconcile', () => {
   it('reconcile all child nodes', () => {
-    const document = new Document()
-    const fragment = document.createFragment()
-    const a = document.createElement('a')
-    const b = document.createElement('b')
-    const c = document.createElement('c')
+    const fragment = fragdom.createFragment()
+    const a = fragdom.createElement('a')
+    const b = fragdom.createElement('b')
+    const c = fragdom.createElement('c')
 
     fragment.appendChild(a)
     fragment.appendChild(b)
@@ -23,12 +22,11 @@ describe('reconcile', () => {
   })
 
   it('merges with child fragments', () => {
-    const document = new Document()
-    const fragment = document.createFragment()
-    const childFragment = document.createFragment()
-    const a = document.createElement('a')
-    const b = document.createElement('b')
-    const c = document.createElement('c')
+    const fragment = fragdom.createFragment()
+    const childFragment = fragdom.createFragment()
+    const a = fragdom.createElement('a')
+    const b = fragdom.createElement('b')
+    const c = fragdom.createElement('c')
 
     fragment.appendChild(a)
     fragment.appendChild(childFragment)
@@ -42,21 +40,34 @@ describe('reconcile', () => {
       window.document.createElement('c'),
     ])
   })
+
+  it('triggers a reconciliation in the closest non-fragment parent', done => {
+    const a = fragdom.createElement('div')
+    const b = fragdom.createFragment()
+    const c = fragdom.createFragment()
+    const d = fragdom.createTextNode('Hello world')
+
+    a.appendChild(b)
+    b.appendChild(c)
+    c.appendChild(d)
+
+    a.reconcile = done
+
+    c.reconcile()
+  })
 })
 
 describe('reconcileAsync', () => {
   it('runs reconcile', done => {
-    const document = new Document()
-    const fragment = document.createFragment()
+    const fragment = fragdom.createFragment()
 
     interceptMethod(fragment, 'reconcile', () => done())
     fragment.reconcileAsync()
   })
 
   it('runs reconcile after an animation frame', done => {
-    const document = new Document()
-    const fragment = document.createFragment()
-    fragment.appendChild(document.createElement('div'))
+    const fragment = fragdom.createFragment()
+    fragment.appendChild(fragdom.createElement('div'))
 
     fragment.reconcileAsync()
 
@@ -67,8 +78,7 @@ describe('reconcileAsync', () => {
   })
 
   it('cancels reconcileAsync when running reconcile', done => {
-    const document = new Document()
-    const fragment = document.createFragment()
+    const fragment = fragdom.createFragment()
 
     let calls = 0
 
@@ -86,8 +96,7 @@ describe('reconcileAsync', () => {
   })
 
   it('can access the realNode of an empty fragment', () => {
-    const document = new Document()
-    const fragment = document.createFragment()
+    const fragment = fragdom.createFragment()
 
     fragment.reconcile()
 
