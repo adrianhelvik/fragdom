@@ -217,3 +217,15 @@ it('sets the parentNode from the existing element', () => {
 
   expect(wrappedInner.parentNode).toBe(fragdom.wrap(outer))
 })
+
+it('can wrap elements that are mounted to the document', () => {
+  const outer = document.createElement('outer')
+  const inner = document.createElement('inner')
+
+  document.body.appendChild(outer)
+  outer.appendChild(inner)
+
+  const wrappedInner = fragdom.wrap(inner)
+
+  expect(wrappedInner.parentNode).toBe(fragdom.wrap(outer))
+})

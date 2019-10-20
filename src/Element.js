@@ -23,7 +23,7 @@ class Element extends Node {
       }
       this.#tagName = arg.tagName
       this.setRealNodeAfterReconciliation(arg)
-      if (arg.parentNode) {
+      if (arg.parentNode && arg.parentNode !== document) {
         this.parentNode = fragdom.wrap(arg.parentNode)
       }
     } else if (typeof arg === 'string') {
