@@ -96,7 +96,11 @@ class Element extends Node {
       }
     }
 
-    for (let i = completeAt; i < realNode.childNodes.length; i++) {
+    for (
+      let i = realNode.childNodes.length - 1;
+      i >= 0 && i >= completeAt;
+      i--
+    ) {
       realNode.removeChild(realNode.childNodes[i])
     }
 
