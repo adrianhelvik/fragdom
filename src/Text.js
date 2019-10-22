@@ -1,5 +1,4 @@
 import Node from './Node.js'
-import util from 'util'
 
 class Text extends Node {
   #animationFrame = null
@@ -7,10 +6,6 @@ class Text extends Node {
   constructor(text) {
     super()
     this.textContent = text
-  }
-
-  debug() {
-    return `{${util.inspect(this.textContent)}}`
   }
 
   reconcile() {

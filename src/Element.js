@@ -1,6 +1,5 @@
 import indent from './indent'
 import Node from './Node.js'
-import util from 'util'
 
 let instancePrefix = '$'
 
@@ -45,23 +44,6 @@ class Element extends Node {
 
   removeAttribute(key) {
     this.attributes[key] = null
-  }
-
-  debug() {
-    const tag = this.tagName.toLowerCase()
-    let attrs = ''
-
-    for (const [key, value] of Object.entries(this.attributes)) {
-      if (value != null) {
-        attrs += ` ${key}={${util.inspect(value)}}`
-      }
-    }
-
-    return [
-      `<${tag}${attrs}>`,
-      ...this.childNodes.map(x => indent(x.debug())),
-      `</${tag}>`,
-    ].join('\n')
   }
 
   reconcile(isContinuation) {
