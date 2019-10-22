@@ -1,4 +1,3 @@
-import indent from './indent'
 import Node from './Node.js'
 
 let instancePrefix = '$'

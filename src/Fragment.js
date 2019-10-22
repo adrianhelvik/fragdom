@@ -1,4 +1,3 @@
-import indent from './indent.js'
 import Node from './Node.js'
 
 class Fragment extends Node {
@@ -13,12 +12,6 @@ class Fragment extends Node {
   removeChild(...args) {
     super.removeChild(...args)
     this.#dirty = true
-  }
-
-  debug() {
-    return ['<>', ...this.childNodes.map(x => indent(x.debug())), '</>'].join(
-      '\n',
-    )
   }
 
   reconcile(isContinuation) {
