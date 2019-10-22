@@ -1,6 +1,7 @@
 import fragdom from '.'
+import h from './h'
 
-test('bugfix', () => {
+test('bugfix 1', () => {
   // <container>
   //   <first-child>Hello world</first-child>
   //   <second-child>
@@ -31,4 +32,26 @@ test('bugfix', () => {
   container.reconcile()
 
   expect(container.realNode.outerHTML).toBe('<container></container>')
+})
+
+test('bugfix 2', () => {
+  const root = (
+    <div id="root">
+      <>
+        <></>
+      </>
+    </div>
+  )
+
+  root.reconcile()
+
+  root.childNodes[0].childNodes[0].appendChild(
+    <>
+      <>Hello world!</>
+    </>,
+  )
+
+  root.childNodes[0].childNodes[0].childNodes[0].reconcile()
+
+  expect(root.realNode.innerHTML).toBe('Hello world!')
 })

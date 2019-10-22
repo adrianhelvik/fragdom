@@ -118,8 +118,17 @@ describe('reconcileAsync', () => {
   })
 
   it('cancels reconcileAsync when running reconcile', done => {
-    const fragment = fragdom.createFragment()
+    let desiredReconcileCount = 0
 
+    {
+      const fragment = fragdom.createFragment()
+      interceptMethod(fragment, 'reconcile', () => {
+        desiredReconcileCount += 1
+      })
+      fragment.reconcile()
+    }
+
+    const fragment = fragdom.createFragment()
     let calls = 0
 
     interceptMethod(fragment, 'reconcile', () => {
@@ -130,7 +139,7 @@ describe('reconcileAsync', () => {
     fragment.reconcile()
 
     requestAnimationFrame(() => {
-      expect(calls).toBe(1)
+      expect(calls).toBe(desiredReconcileCount)
       done()
     })
   })

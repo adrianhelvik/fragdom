@@ -1,3 +1,4 @@
+import indent from './indent.js'
 import Node from './Node.js'
 
 class Fragment extends Node {
@@ -14,22 +15,30 @@ class Fragment extends Node {
     this.#dirty = true
   }
 
-  reconcile() {
+  debug() {
+    return ['<>', ...this.childNodes.map(x => indent(x.debug())), '</>'].join(
+      '\n',
+    )
+  }
+
+  reconcile(isContinuation) {
+    if (!isContinuation) {
+      return this.reconcileNearestParentElement()
+    }
+
     if (this.#animationFrame != null) {
       cancelAnimationFrame(this.#animationFrame)
       this.#animationFrame = null
     }
 
-    if (!this.#dirty) {
-      return
-    }
+    if (!this.#dirty) return
 
     this.#dirty = false
 
     const realNode = []
 
     for (let node of this.childNodes) {
-      node.reconcile()
+      node.reconcile(true)
       if (Array.isArray(node.realNode)) {
         realNode.push(...node.realNode)
       } else {
@@ -38,10 +47,18 @@ class Fragment extends Node {
     }
 
     this.setRealNodeAfterReconciliation(realNode)
+  }
 
-    if (this.parentNode) {
-      this.parentNode.reconcile()
+  reconcileNearestParentElement() {
+    let node = this
+
+    while (node && node instanceof Fragment) {
+      node.#dirty = true
+      node = node.parentNode
     }
+
+    if (node) node.reconcile()
+    else this.reconcile(true)
   }
 
   reconcileAsync() {

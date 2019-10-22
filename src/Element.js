@@ -1,4 +1,6 @@
+import indent from './indent'
 import Node from './Node.js'
+import util from './util'
 
 let instancePrefix = '$'
 
@@ -45,7 +47,24 @@ class Element extends Node {
     this.attributes[key] = null
   }
 
-  reconcile() {
+  debug() {
+    const tag = this.tagName.toLowerCase()
+    let attrs = ''
+
+    for (const [key, value] of Object.entries(this.attributes)) {
+      if (value != null) {
+        attrs += ` ${key}={${util.inspect(value)}}`
+      }
+    }
+
+    return [
+      `<${tag}${attrs}>`,
+      ...this.childNodes.map(x => indent(x.debug())),
+      `</${tag}>`,
+    ].join('\n')
+  }
+
+  reconcile(isContinuation) {
     if (this.#animationFrame) {
       cancelAnimationFrame(this.#animationFrame)
       this.#animationFrame = null
@@ -72,7 +91,7 @@ class Element extends Node {
     let index = 0
 
     for (let i = 0; i < this.childNodes.length; i++) {
-      this.childNodes[i].reconcile()
+      this.childNodes[i].reconcile(true)
       const child = this.childNodes[i].realNode
 
       if (Array.isArray(child)) {

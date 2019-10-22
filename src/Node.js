@@ -3,6 +3,7 @@ import Unconstructable from './Unconstructable.js'
 class Node extends Unconstructable {
   static skipChecks = false
 
+  #performedReconciliations = new Set()
   #realNode = null
   parentNode = null
   childNodes = []
