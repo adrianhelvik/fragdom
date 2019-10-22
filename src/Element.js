@@ -1,6 +1,6 @@
 import indent from './indent'
 import Node from './Node.js'
-import util from './util'
+import util from 'util'
 
 let instancePrefix = '$'
 
