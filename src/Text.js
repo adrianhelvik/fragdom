@@ -2,10 +2,34 @@ import Node from './Node.js'
 
 class Text extends Node {
   #animationFrame = null
+  #textContent = ''
+  #dirty = true
 
-  constructor(text) {
+  constructor(textOrElement) {
     super()
-    this.textContent = text
+    if (textOrElement instanceof window.Text) {
+      this.setRealNodeAfterReconciliation(textOrElement)
+      this.textContent = textOrElement.textContent
+    } else {
+      this.textContent = textOrElement
+    }
+  }
+
+  debug() {
+    return this.textContent
+  }
+
+  set textContent(textContent) {
+    this.#textContent = textContent
+    this.#dirty = true
+  }
+
+  get textContent() {
+    return this.#textContent
+  }
+
+  markAsDirty() {
+    this.#dirty = true
   }
 
   reconcile() {
@@ -13,6 +37,9 @@ class Text extends Node {
       cancelAnimationFrame(this.#animationFrame)
       this.#animationFrame = null
     }
+
+    if (!this.#dirty) return
+    this.#dirty = false
 
     const realNode =
       this.getPrivateRealNodeWithoutChecks() ||

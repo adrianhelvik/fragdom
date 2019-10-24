@@ -1,6 +1,6 @@
 {
   "name": "@adrianhelvik/fragdom",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "main": "dist/index.js",
   "module": "src/index.js",
   "license": "MIT",
@@ -11,28 +11,32 @@
     "@babel/plugin-proposal-private-methods": "^7.6.0",
     "@babel/preset-env": "^7.6.3",
     "coveralls": "^3.0.7",
-    "jest": "^24.9.0"
+    "jest": "^24.9.0",
+    "@babel/preset-react": "^7.6.3",
+    "rollup": "^1.25.2",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-node-resolve": "^5.2.0"
   },
   "scripts": {
     "start": "jest --watch",
-    "test": "rm -r dist; jest --coverage",
-    "build": "rm -r dist; babel src --out-dir dist --ignore '**/*.spec.js'",
+    "test": "jest --coverage",
+    "build": "rm -r dist; babel src --out-dir dist --ignore '**/*.spec.js'; rollup -c",
     "prepublish": "npm run test && npm run build",
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "babel": {
     "presets": [
       "@babel/preset-env",
-      ["@babel/preset-react", {
-        "pragma": "h",
-        "pragmaFrag": "h.Fragment"
-      }]
+      [
+        "@babel/preset-react",
+        {
+          "pragma": "h",
+          "pragmaFrag": "h.Fragment"
+        }
+      ]
     ],
     "plugins": [
       "@babel/plugin-proposal-class-properties"
     ]
-  },
-  "dependencies": {
-    "@babel/preset-react": "^7.6.3"
   }
 }

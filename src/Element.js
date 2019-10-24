@@ -1,3 +1,4 @@
+import indent from './indent'
 import Node from './Node.js'
 
 let instancePrefix = '$'
@@ -5,6 +6,7 @@ let instancePrefix = '$'
 class Element extends Node {
   attributes = {}
 
+  #dirty = true
   #animationFrame = null
   #tagName = null
 
@@ -13,6 +15,17 @@ class Element extends Node {
   }
 
   set tagName(tagName) {}
+
+  appendChild(child) {
+    super.appendChild(child)
+    child.markAsDirty()
+    this.#dirty = true
+  }
+
+  removeChild(child) {
+    super.removeChild(child)
+    this.#dirty = true
+  }
 
   constructor(arg, fragdom) {
     super()
@@ -33,16 +46,45 @@ class Element extends Node {
     }
   }
 
+  markAsDirty() {
+    this.#dirty = true
+  }
+
+  dirty() {
+    return this.#dirty
+  }
+
+  requestReconciliation() {
+    this.#dirty = true
+    this.reconcile()
+  }
+
   getAttribute(key) {
     return this.attributes[key]
   }
 
   setAttribute(key, value) {
     this.attributes[key] = value
+    this.#dirty = true
   }
 
   removeAttribute(key) {
     this.attributes[key] = null
+    this.#dirty = true
+  }
+
+  debug() {
+    const tagName = this.tagName.toLowerCase()
+    let attrs = ''
+    for (const [k, v] of Object.entries(this.attributes)) {
+      attrs += ` ${k}={${v}}`
+    }
+
+    return [
+      `<${tagName}${attrs}>`,
+      ...this.childNodes.map(x => indent(x.debug())),
+      `</${tagName}>`,
+    ].join(this.childNodes.length ? '\n' : '')
   }
 
   reconcile(isContinuation) {
@@ -50,6 +92,12 @@ class Element extends Node {
       cancelAnimationFrame(this.#animationFrame)
       this.#animationFrame = null
     }
+
+    if (!this.dirty()) {
+      return
+    }
+
+    this.#dirty = false
 
     const realNode =
       this.getPrivateRealNodeWithoutChecks() ||

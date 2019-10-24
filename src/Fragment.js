@@ -1,3 +1,4 @@
+import indent from './indent'
 import Node from './Node.js'
 
 class Fragment extends Node {
@@ -6,12 +7,22 @@ class Fragment extends Node {
 
   appendChild(...args) {
     super.appendChild(...args)
-    this.#dirty = true
+    this.markAsDirty()
   }
 
-  removeChild(...args) {
-    super.removeChild(...args)
-    this.#dirty = true
+  removeChild(child) {
+    super.removeChild(child)
+    this.markAsDirty()
+  }
+
+  dirty() {
+    return this.#dirty
+  }
+
+  debug() {
+    return ['<>', ...this.childNodes.map(x => indent(x.debug())), '</>'].join(
+      this.childNodes.length ? '\n' : '',
+    )
   }
 
   reconcile(isContinuation) {
@@ -24,7 +35,14 @@ class Fragment extends Node {
       this.#animationFrame = null
     }
 
-    if (!this.#dirty) return
+    if (this.parentNode && this.parentNode.dirty()) {
+      return this.parentNode.reconcile()
+    }
+
+    if (!this.#dirty) {
+      console.log('Not dirty. Skipping frag:', this.debug())
+      return
+    }
 
     this.#dirty = false
 
@@ -42,6 +60,13 @@ class Fragment extends Node {
     this.setRealNodeAfterReconciliation(realNode)
   }
 
+  markAsDirty() {
+    if (this.parentNode) {
+      this.parentNode.markAsDirty()
+    }
+    this.#dirty = true
+  }
+
   reconcileNearestParentElement() {
     let node = this
 
@@ -50,7 +75,7 @@ class Fragment extends Node {
       node = node.parentNode
     }
 
-    if (node) node.reconcile()
+    if (node) node.requestReconciliation()
     else this.reconcile(true)
   }
 

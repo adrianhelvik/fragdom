@@ -23,9 +23,18 @@ class Document {
       return this.#elementToNode.get(realNode)
     }
 
+    if (realNode === document) {
+      return this
+    }
+
     switch (realNode.nodeType) {
       case window.Node.ELEMENT_NODE: {
         const node = withConstructor(() => new Element(realNode, this))
+        this.#elementToNode.set(realNode, node)
+        return node
+      }
+      case window.Node.TEXT_NODE: {
+        const node = withConstructor(() => new Text(realNode, this))
         this.#elementToNode.set(realNode, node)
         return node
       }
