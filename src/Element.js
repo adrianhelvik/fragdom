@@ -94,6 +94,9 @@ class Element extends Node {
     }
 
     if (!this.dirty()) {
+      for (const node of this.childNodes) {
+        node.reconcile(true)
+      }
       return
     }
 

@@ -70,3 +70,14 @@ it('handles comments', () => {
   root.reconcile()
   expect(document.body.innerHTML).toBe('<!-- My comment -->Hello world')
 })
+
+test('another bugfix', () => {
+  const root = fragdom.createElement('div')
+  root.reconcile()
+  root.appendChild(<a />)
+  root.reconcile()
+  expect(root.realNode.innerHTML).toBe('<a></a>')
+  root.childNodes[0].appendChild(<b />)
+  root.reconcile()
+  expect(root.realNode.innerHTML).toBe('<a><b></b></a>')
+})
