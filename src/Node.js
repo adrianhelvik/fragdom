@@ -17,6 +17,19 @@ class Node extends Unconstructable {
     return this.#realNode
   }
 
+  replaceChild(newChild, oldChild) {
+    const index = this.childNodes.indexOf(oldChild)
+
+    if (index === -1) {
+      throw Error(
+        "Failed to execute 'replaceChild' on 'Node'. The node to be replaced is not a child of this node.",
+      )
+    }
+
+    this.childNodes[index] = newChild
+    newChild.parentNode = this
+  }
+
   getPrivateRealNodeWithoutChecks() {
     return this.#realNode
   }

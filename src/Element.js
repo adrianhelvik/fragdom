@@ -22,6 +22,12 @@ class Element extends Node {
     this.#dirty = true
   }
 
+  replaceChild(newChild, oldChild) {
+    super.replaceChild(newChild, oldChild)
+    newChild.markAsDirty()
+    this.#dirty = true
+  }
+
   removeChild(child) {
     super.removeChild(child)
     this.#dirty = true
@@ -141,10 +147,10 @@ class Element extends Node {
       } else {
         if (realNode.childNodes[i] !== child) {
           if (realNode.childNodes[i]) {
-            realNode.removeChild(realNode.childNodes[i])
+            realNode.replaceChild(child, realNode.childNodes[i])
+          } else {
+            realNode.appendChild(child)
           }
-
-          realNode.appendChild(child)
         }
         index += 1
       }

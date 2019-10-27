@@ -1,5 +1,6 @@
 import { interceptMethod } from '../testUtils.js'
 import fragdom from './fragdom.js'
+import h from './h.js'
 
 describe('setAttribute(key, value)', () => {
   it('updates .attributes', () => {
@@ -274,4 +275,54 @@ it('can wrap elements that are mounted to the document', () => {
   const wrappedInner = fragdom.wrap(inner)
 
   expect(wrappedInner.parentNode).toBe(fragdom.wrap(outer))
+})
+
+describe('.replaceChild(newChild, oldChild)', () => {
+  it('replaces the child in .childNodes', () => {
+    const template = (
+      <outer>
+        <a />
+        <b />
+        <c />
+      </outer>
+    )
+
+    template.replaceChild(
+      fragdom.createElement('new-b'),
+      template.childNodes[1],
+    )
+
+    expect(template.debug()).toBe(
+      [
+        '<outer>',
+        '  <a></a>',
+        '  <new-b></new-b>',
+        '  <c></c>',
+        '</outer>',
+      ].join('\n'),
+    )
+  })
+
+  it('reconciles correctly', () => {
+    const template = (
+      <outer>
+        <a />
+        <b />
+        <c />
+      </outer>
+    )
+
+    template.reconcile()
+
+    window.DEBUG = true
+
+    template.replaceChild(
+      fragdom.createElement('new-b'),
+      template.childNodes[1],
+    )
+
+    template.reconcile()
+
+    expect(template.realNode.innerHTML).toBe('<a></a><new-b></new-b><c></c>')
+  })
 })
