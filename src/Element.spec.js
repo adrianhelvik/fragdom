@@ -314,8 +314,6 @@ describe('.replaceChild(newChild, oldChild)', () => {
 
     template.reconcile()
 
-    window.DEBUG = true
-
     template.replaceChild(
       fragdom.createElement('new-b'),
       template.childNodes[1],
@@ -324,5 +322,25 @@ describe('.replaceChild(newChild, oldChild)', () => {
     template.reconcile()
 
     expect(template.realNode.innerHTML).toBe('<a></a><new-b></new-b><c></c>')
+  })
+
+  test('reconciliation bugfix', () => {
+    const root = <div />
+
+    const frag = (
+      <>
+        {'1'}
+        {''}
+        {'2'}
+      </>
+    )
+
+    root.appendChild(frag)
+    frag.reconcile()
+
+    frag.replaceChild(fragdom.createTextNode('Hello'), frag.childNodes[1])
+    frag.reconcile()
+
+    expect(root.realNode.innerHTML).toBe('1Hello2')
   })
 })

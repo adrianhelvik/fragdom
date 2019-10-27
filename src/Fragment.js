@@ -15,6 +15,11 @@ class Fragment extends Node {
     this.markAsDirty()
   }
 
+  replaceChild(newChild, oldChild) {
+    super.replaceChild(newChild, oldChild)
+    this.markAsDirty()
+  }
+
   dirty() {
     return this.#dirty
   }

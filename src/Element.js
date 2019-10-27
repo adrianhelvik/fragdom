@@ -137,10 +137,10 @@ class Element extends Node {
         for (const c of child) {
           if (realNode.childNodes[index] !== c) {
             if (realNode.childNodes[index]) {
-              realNode.removeChild(realNode.childNodes[index])
+              realNode.replaceChild(c, realNode.childNodes[index])
+            } else {
+              realNode.appendChild(c)
             }
-
-            realNode.appendChild(c)
           }
           index += 1
         }
