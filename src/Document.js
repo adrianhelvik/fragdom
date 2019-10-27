@@ -31,6 +31,9 @@ class Document {
       case window.Node.ELEMENT_NODE: {
         const node = withConstructor(() => new Element(realNode, this))
         this.#elementToNode.set(realNode, node)
+        for (const child of Array.from(realNode.childNodes)) {
+          node.childNodes.push(this.wrap(child))
+        }
         return node
       }
       case window.Node.TEXT_NODE: {

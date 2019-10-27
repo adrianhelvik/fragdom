@@ -44,3 +44,13 @@ describe('debug', () => {
     )
   })
 })
+
+test('bugfix', () => {
+  document.body.innerHTML = '<script></script>'
+  const body = fragdom.wrap(document.body)
+  const root = fragdom.createFragment()
+  root.appendChild(fragdom.createTextNode('Hello world'))
+  body.appendChild(root)
+  root.reconcile()
+  expect(document.body.innerHTML).toBe('<script></script>Hello world')
+})
