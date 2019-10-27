@@ -1,5 +1,6 @@
 import Unconstructable, { withConstructor } from './Unconstructable.js'
 import Fragment from './Fragment.js'
+import Comment from './Comment.js'
 import Element from './Element.js'
 import Text from './Text.js'
 
@@ -38,6 +39,11 @@ class Document {
       }
       case window.Node.TEXT_NODE: {
         const node = withConstructor(() => new Text(realNode, this))
+        this.#elementToNode.set(realNode, node)
+        return node
+      }
+      case window.Node.COMMENT_NODE: {
+        const node = withConstructor(() => new Comment(realNode, this))
         this.#elementToNode.set(realNode, node)
         return node
       }
