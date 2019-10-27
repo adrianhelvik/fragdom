@@ -40,7 +40,6 @@ class Fragment extends Node {
     }
 
     if (!this.#dirty) {
-      console.log('Not dirty. Skipping frag:', this.debug())
       return
     }
 
