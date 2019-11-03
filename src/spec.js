@@ -81,3 +81,54 @@ test('another bugfix', () => {
   root.reconcile()
   expect(root.realNode.innerHTML).toBe('<a><b></b></a>')
 })
+
+test('bugfix adjacent fragments', () => {
+  const root = <div />
+
+  root.appendChild(
+    <>
+      <>
+        <>
+          {''}
+          {'1'}
+          {'2'}
+          {'3'}
+        </>
+      </>
+    </>,
+  )
+
+  root.reconcile()
+
+  root.childNodes[0].childNodes[0].childNodes[0].replaceChild(
+    fragdom.createTextNode('Hello'),
+    root.childNodes[0].childNodes[0].childNodes[0].childNodes[0],
+  )
+
+  root.childNodes[0].childNodes[0].reconcile()
+
+  expect(root.realNode.innerHTML).toBe('Hello123')
+})
+
+test('bugfix fragment with element with text not updating', () => {
+  const root = <div />
+
+  root.reconcile()
+
+  root.appendChild(
+    <>
+      <div>Hi "{'a'}"</div>
+    </>,
+  )
+
+  root.reconcile()
+
+  root.childNodes[0].childNodes[0].replaceChild(
+    fragdom.createTextNode('b'),
+    root.childNodes[0].childNodes[0].childNodes[1],
+  )
+
+  root.reconcile()
+
+  expect(root.realNode.innerHTML).toBe('<div>Hi "b"</div>')
+})
