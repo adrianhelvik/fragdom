@@ -82,7 +82,7 @@ test('another bugfix', () => {
   expect(root.realNode.innerHTML).toBe('<a><b></b></a>')
 })
 
-test('bugfix adjacent fragments', () => {
+test('bugfix: adjacent fragments', () => {
   const root = <div />
 
   root.appendChild(
@@ -110,7 +110,7 @@ test('bugfix adjacent fragments', () => {
   expect(root.realNode.innerHTML).toBe('Hello123')
 })
 
-test('bugfix fragment with element with text not updating', () => {
+test('bugfix: fragment with element with text not updating', () => {
   const root = <div />
 
   root.reconcile()
@@ -131,4 +131,17 @@ test('bugfix fragment with element with text not updating', () => {
   root.reconcile()
 
   expect(root.realNode.innerHTML).toBe('<div>Hi "b"</div>')
+})
+
+test('bugfix: replace text node with empty fragment', () => {
+  const root = <div>Hello</div>
+  root.reconcile()
+  root.replaceChild(<></>, root.childNodes[0])
+  root.reconcile()
+  expect(root.debug().split('\n')).toEqual([
+    '<div>' /********************************/,
+    '  <></>',
+    '</div>',
+  ])
+  expect(root.realNode.outerHTML).toBe('<div></div>')
 })

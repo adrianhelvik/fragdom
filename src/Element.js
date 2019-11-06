@@ -125,7 +125,6 @@ class Element extends Node {
       }
     }
 
-    let completeAt = this.childNodes.length
     let index = 0
 
     for (let i = 0; i < this.childNodes.length; i++) {
@@ -133,7 +132,6 @@ class Element extends Node {
       const child = this.childNodes[i].realNode
 
       if (Array.isArray(child)) {
-        completeAt += child.length
         for (const c of child) {
           if (realNode.childNodes[index] !== c) {
             if (realNode.childNodes[index]) {
@@ -156,11 +154,7 @@ class Element extends Node {
       }
     }
 
-    for (
-      let i = realNode.childNodes.length - 1;
-      i >= 0 && i >= completeAt;
-      i--
-    ) {
+    for (let i = realNode.childNodes.length - 1; i >= 0 && i >= index; i--) {
       realNode.removeChild(realNode.childNodes[i])
     }
 
