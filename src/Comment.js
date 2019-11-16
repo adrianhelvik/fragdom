@@ -1,7 +1,7 @@
 import Node from './Node.js'
 
 class Comment extends Node {
-  #raf
+  raf
 
   constructor(realNode, fragdom) {
     super()
@@ -9,16 +9,16 @@ class Comment extends Node {
   }
 
   reconcile() {
-    cancelAnimationFrame(this.#raf)
+    cancelAnimationFrame(this.raf)
 
     // ... ?
   }
 
   reconcileAsync() {
-    if (this.#raf) return
+    if (this.raf) return
 
-    this.#raf = requestAnimationFrame(() => {
-      this.#raf = null
+    this.raf = requestAnimationFrame(() => {
+      this.raf = null
       this.reconcile()
     })
   }

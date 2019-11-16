@@ -1,20 +1,40 @@
+import { unwrap, computed, observable } from '@adrianhelvik/bind'
 import Unconstructable from './Unconstructable.js'
 
 class Node extends Unconstructable {
   static skipChecks = false
 
-  #performedReconciliations = new Set()
-  #realNode = null
-  parentNode = null
+  nodeState = observable({
+    parentNode: null,
+    realNode: null,
+    childNodes: [],
+  })
+
+  set parentNode(parentNode) {
+    this.nodeState.parentNode = parentNode
+  }
+
+  get parentNode() {
+    return unwrap(this.nodeState.parentNode)
+  }
+
+  get childNodes() {
+    return this.nodeState.childNodes
+  }
+
+  set childNodes(childNodes) {
+    this.childNodes = observable(childNodes)
+  }
+
   childNodes = []
 
   get realNode() {
-    if (!this.#realNode) {
+    if (!this.nodeState.realNode) {
       throw Error(
         '[nonstandard] You must reconcile before getting the real node',
       )
     }
-    return this.#realNode
+    return this.nodeState.realNode
   }
 
   replaceChild(newChild, oldChild) {
@@ -31,11 +51,11 @@ class Node extends Unconstructable {
   }
 
   getPrivateRealNodeWithoutChecks() {
-    return this.#realNode
+    return this.nodeState.realNode
   }
 
   setRealNodeAfterReconciliation(realNode) {
-    this.#realNode = realNode
+    this.nodeState.realNode = realNode
   }
 
   appendChild(child) {
@@ -61,11 +81,17 @@ class Node extends Unconstructable {
     this.childNodes.push(child)
   }
 
-  contains(node) {
-    if (this === node) return true
+  contains(node, source) {
+    if (this === source) {
+      throw Error('Cyclic node graph detected')
+    }
+
+    if (this === node) {
+      return true
+    }
 
     for (const child of this.childNodes) {
-      if (child.contains(node)) {
+      if (child.contains(node, source || this)) {
         return true
       }
     }
@@ -78,7 +104,7 @@ class Node extends Unconstructable {
       throw Error('[nonstandard] Can not remove node with no parent')
     }
 
-    this.parentNode.removeChild(this)
+    this.parentNode.removeChild(observable(this))
   }
 
   removeChild(child) {

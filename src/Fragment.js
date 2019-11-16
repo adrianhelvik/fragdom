@@ -1,27 +1,20 @@
+import { memoize } from '@adrianhelvik/bind'
 import indent from './indent'
 import Node from './Node.js'
 
 class Fragment extends Node {
-  #animationFrame = null
-  #dirty = true
+  animationFrame = null
 
   appendChild(...args) {
     super.appendChild(...args)
-    this.markAsDirty()
   }
 
   removeChild(child) {
     super.removeChild(child)
-    this.markAsDirty()
   }
 
   replaceChild(newChild, oldChild) {
     super.replaceChild(newChild, oldChild)
-    this.markAsDirty()
-  }
-
-  dirty() {
-    return this.#dirty
   }
 
   debug() {
@@ -30,69 +23,47 @@ class Fragment extends Node {
     )
   }
 
-  reconcile(isContinuation) {
-    if (!isContinuation) {
-      return this.reconcileNearestParentElement()
+  get realNode() {
+    return this.reconcileDown()
+  }
+
+  reconcile = () => {
+    let node = this.parentNode
+
+    while (node instanceof Fragment) {
+      node = node.parentNode
     }
 
-    if (this.#animationFrame != null) {
-      cancelAnimationFrame(this.#animationFrame)
-      this.#animationFrame = null
-    }
+    if (node) node.reconcile()
+  }
 
-    if (this.parentNode && this.parentNode.dirty()) {
-      return this.parentNode.reconcile()
+  reconcileDown = memoize(() => {
+    if (this.animationFrame != null) {
+      cancelAnimationFrame(this.animationFrame)
+      this.animationFrame = null
     }
-
-    if (!this.#dirty) {
-      for (const node of this.childNodes) {
-        node.reconcile(isContinuation)
-      }
-      return
-    }
-
-    this.#dirty = false
 
     const realNode = []
 
     for (let node of this.childNodes) {
-      node.reconcile(true)
-      if (Array.isArray(node.realNode)) {
-        realNode.push(...node.realNode)
+      if (node instanceof Fragment) {
+        realNode.push(...node.reconcileDown())
       } else {
+        node.reconcile()
         realNode.push(node.realNode)
       }
     }
 
-    this.setRealNodeAfterReconciliation(realNode)
-  }
-
-  markAsDirty() {
-    if (this.parentNode) {
-      this.parentNode.markAsDirty()
-    }
-    this.#dirty = true
-  }
-
-  reconcileNearestParentElement() {
-    let node = this
-
-    while (node && node instanceof Fragment) {
-      node.#dirty = true
-      node = node.parentNode
-    }
-
-    if (node) node.requestReconciliation()
-    else this.reconcile(true)
-  }
+    return realNode
+  })
 
   reconcileAsync() {
-    if (this.#animationFrame != null) {
+    if (this.animationFrame != null) {
       return
     }
 
-    this.#animationFrame = requestAnimationFrame(() => {
-      this.#animationFrame = null
+    this.animationFrame = requestAnimationFrame(() => {
+      this.animationFrame = null
       this.reconcile()
     })
   }

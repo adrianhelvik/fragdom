@@ -19,6 +19,7 @@ test('repro', () => {
   root.reconcile()
 
   const todoNameNode = root.realNode.querySelector('.todoName')
+  expect(todoNameNode).not.toBe(null)
   const wrappedTodoNameNode = fragdom.wrap(todoNameNode)
 
   expect(wrappedTodoNameNode.debug()).toBe(

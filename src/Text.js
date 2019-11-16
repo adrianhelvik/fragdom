@@ -1,9 +1,12 @@
+import { observable, memoize } from '@adrianhelvik/bind'
 import Node from './Node.js'
 
 class Text extends Node {
-  #animationFrame = null
-  #textContent = ''
-  #dirty = true
+  animationFrame = null
+
+  textState = observable({
+    textContent: '',
+  })
 
   constructor(textOrElement) {
     super()
@@ -20,26 +23,18 @@ class Text extends Node {
   }
 
   set textContent(textContent) {
-    this.#textContent = textContent
-    this.#dirty = true
+    this.textState.textContent = textContent
   }
 
   get textContent() {
-    return this.#textContent
+    return this.textState.textContent
   }
 
-  markAsDirty() {
-    this.#dirty = true
-  }
-
-  reconcile() {
-    if (this.#animationFrame) {
-      cancelAnimationFrame(this.#animationFrame)
-      this.#animationFrame = null
+  reconcile = memoize.skipRecursive(() => {
+    if (this.animationFrame) {
+      cancelAnimationFrame(this.animationFrame)
+      this.animationFrame = null
     }
-
-    if (!this.#dirty) return
-    this.#dirty = false
 
     const realNode =
       this.getPrivateRealNodeWithoutChecks() ||
@@ -50,15 +45,15 @@ class Text extends Node {
     }
 
     this.setRealNodeAfterReconciliation(realNode)
-  }
+  })
 
   reconcileAsync() {
-    if (this.#animationFrame != null) {
+    if (this.animationFrame != null) {
       return
     }
 
-    this.#animationFrame = requestAnimationFrame(() => {
-      this.#animationFrame = null
+    this.animationFrame = requestAnimationFrame(() => {
+      this.animationFrame = null
       this.reconcile()
     })
   }

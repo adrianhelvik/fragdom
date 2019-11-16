@@ -141,6 +141,6 @@ describe('[nonstandard] .realNode', () => {
     const node = new Node()
     const element = window.document.createElement('div')
     node.setRealNodeAfterReconciliation(element)
-    expect(node.realNode).toBe(element)
+    expect(node.realNode).toEqual(element)
   })
 })

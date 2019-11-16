@@ -125,9 +125,7 @@ describe('[nonstandard] .reconcile()', () => {
     fragment.appendChild(b)
     fragment.appendChild(c)
     container.reconcile()
-    expect(fragment.dirty()).toBe(false)
     fragment.removeChild(b)
-    expect(fragment.dirty()).toBe(true)
     container.reconcile()
     expect(container.realNode.innerHTML).toBe('<a></a><c></c>')
   })
@@ -170,51 +168,6 @@ describe('[nonstandard] .reconcile()', () => {
     element.reconcile()
 
     expect(element.realNode.message).toBe(null)
-  })
-})
-
-describe('[nonstandard .dirty()', () => {
-  it('is true for newly created elements', () => {
-    const element = fragdom.createElement('div')
-    expect(element.dirty()).toBe(true)
-  })
-
-  it('is false after the initial reconciliation', () => {
-    const element = fragdom.createElement('div')
-    element.reconcile()
-    expect(element.dirty()).toBe(false)
-  })
-
-  it('is true after setting an attribute', () => {
-    const element = fragdom.createElement('div')
-    element.reconcile()
-    element.setAttribute('class', 'my-div')
-    expect(element.dirty()).toBe(true)
-  })
-
-  it('is true after removing an attribute', () => {
-    const element = fragdom.createElement('div')
-    element.reconcile()
-    element.setAttribute('class', 'my-div')
-    element.reconcile()
-    element.removeAttribute('class')
-    expect(element.dirty()).toBe(true)
-  })
-
-  it('is true after appending a child', () => {
-    const element = fragdom.createElement('div')
-    element.reconcile()
-    element.appendChild(fragdom.createElement('div'))
-    expect(element.dirty()).toBe(true)
-  })
-
-  it('is true after removing a child', () => {
-    const element = fragdom.createElement('div')
-    element.reconcile()
-    element.appendChild(fragdom.createElement('div'))
-    element.reconcile()
-    element.removeChild(element.childNodes[0])
-    expect(element.dirty()).toBe(true)
   })
 })
 

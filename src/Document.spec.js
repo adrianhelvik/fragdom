@@ -23,7 +23,9 @@ describe('.createElement(tagName)', () => {
   it('can not override the tagName', () => {
     const element = fragdom.createElement('div')
 
-    element.tagName = 'span'
+    try {
+      element.tagName = 'span'
+    } catch (e) {}
 
     expect(element.tagName).toBe('DIV')
   })

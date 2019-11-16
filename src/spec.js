@@ -30,20 +30,6 @@ describe('debug', () => {
     )
   })
 
-  it('can display functions', () => {
-    expect(
-      (
-        <button
-          $onclick={function() {
-            alert('Hello world')
-          }}
-        >
-          Say hi!
-        </button>
-      ).debug(),
-    ).toContain(`alert('Hello world')`)
-  })
-
   it('can show that an object is set as a prop (needs refinement)', () => {
     expect(<div $style={{ color: 'red' }} />.debug()).toBe(
       `<div $style={[object Object]}></div>`,

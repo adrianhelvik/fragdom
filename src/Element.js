@@ -1,36 +1,48 @@
+import { memoize, observable, unwrap } from '@adrianhelvik/bind'
+import Fragment from './Fragment'
 import indent from './indent'
 import Node from './Node.js'
 
 let instancePrefix = '$'
 
 class Element extends Node {
-  attributes = {}
+  animationFrame = null
 
-  #dirty = true
-  #animationFrame = null
-  #tagName = null
+  elementState = observable({
+    attributes: {},
+    tagName: null,
+  })
 
-  get tagName() {
-    return this.#tagName
+  get attributes() {
+    return this.elementState.attributes
   }
 
-  set tagName(tagName) {}
+  set attributes(attributes) {
+    this.elementState.attributes = attributes
+  }
+
+  get tagName() {
+    return this.elementState.tagName
+  }
+
+  set tagName(tagName) {
+    if (this.elementState.tagName) {
+      throw Error('Unsopported mutation of tagName')
+      return
+    }
+    this.elementState.tagName = tagName
+  }
 
   appendChild(child) {
     super.appendChild(child)
-    child.markAsDirty()
-    this.#dirty = true
   }
 
   replaceChild(newChild, oldChild) {
     super.replaceChild(newChild, oldChild)
-    newChild.markAsDirty()
-    this.#dirty = true
   }
 
   removeChild(child) {
     super.removeChild(child)
-    this.#dirty = true
   }
 
   constructor(arg, fragdom) {
@@ -40,29 +52,16 @@ class Element extends Node {
       for (const { name, value } of arg.attributes) {
         this.attributes[name] = value
       }
-      this.#tagName = arg.tagName
+      this.tagName = arg.tagName
       this.setRealNodeAfterReconciliation(arg)
       if (arg.parentNode && arg.parentNode !== document) {
         this.parentNode = fragdom.wrap(arg.parentNode)
       }
     } else if (typeof arg === 'string') {
-      this.#tagName = arg.toUpperCase()
+      this.tagName = arg.toUpperCase()
     } else {
       throw Error('[nonstandard] tagName must be a string or element')
     }
-  }
-
-  markAsDirty() {
-    this.#dirty = true
-  }
-
-  dirty() {
-    return this.#dirty
-  }
-
-  requestReconciliation() {
-    this.#dirty = true
-    this.reconcile()
   }
 
   getAttribute(key) {
@@ -71,12 +70,10 @@ class Element extends Node {
 
   setAttribute(key, value) {
     this.attributes[key] = value
-    this.#dirty = true
   }
 
   removeAttribute(key) {
     this.attributes[key] = null
-    this.#dirty = true
   }
 
   debug() {
@@ -93,24 +90,19 @@ class Element extends Node {
     ].join(this.childNodes.length ? '\n' : '')
   }
 
-  reconcile(isContinuation) {
-    if (this.#animationFrame) {
-      cancelAnimationFrame(this.#animationFrame)
-      this.#animationFrame = null
+  reconcile = memoize(() => {
+    if (this.animationFrame) {
+      cancelAnimationFrame(this.animationFrame)
+      this.animationFrame = null
     }
-
-    if (!this.dirty()) {
-      for (const node of this.childNodes) {
-        node.reconcile(true)
-      }
-      return
-    }
-
-    this.#dirty = false
 
     const realNode =
       this.getPrivateRealNodeWithoutChecks() ||
       window.document.createElement(this.tagName)
+
+    if (!this.getPrivateRealNodeWithoutChecks()) {
+      this.setRealNodeAfterReconciliation(realNode)
+    }
 
     for (const [key, value] of Object.entries(this.attributes)) {
       if (key.startsWith(instancePrefix)) {
@@ -128,26 +120,30 @@ class Element extends Node {
     let index = 0
 
     for (let i = 0; i < this.childNodes.length; i++) {
-      this.childNodes[i].reconcile(true)
-      const child = this.childNodes[i].realNode
+      if (this.childNodes[i] instanceof Fragment) {
+        const child = this.childNodes[i].reconcileDown()
 
-      if (Array.isArray(child)) {
         for (const c of child) {
           if (realNode.childNodes[index] !== c) {
             if (realNode.childNodes[index]) {
-              realNode.replaceChild(c, realNode.childNodes[index])
+              realNode.replaceChild(
+                unwrap(c),
+                unwrap(realNode.childNodes[index]),
+              )
             } else {
-              realNode.appendChild(c)
+              realNode.appendChild(unwrap(c))
             }
           }
           index += 1
         }
       } else {
+        this.childNodes[i].reconcile()
+        const child = this.childNodes[i].realNode
         if (realNode.childNodes[i] !== child) {
           if (realNode.childNodes[i]) {
             realNode.replaceChild(child, realNode.childNodes[i])
           } else {
-            realNode.appendChild(child)
+            realNode.appendChild(unwrap(child))
           }
         }
         index += 1
@@ -157,17 +153,15 @@ class Element extends Node {
     for (let i = realNode.childNodes.length - 1; i >= 0 && i >= index; i--) {
       realNode.removeChild(realNode.childNodes[i])
     }
-
-    this.setRealNodeAfterReconciliation(realNode)
-  }
+  })
 
   reconcileAsync() {
-    if (this.#animationFrame != null) {
+    if (this.animationFrame != null) {
       return
     }
 
-    this.#animationFrame = requestAnimationFrame(() => {
-      this.#animationFrame = null
+    this.animationFrame = requestAnimationFrame(() => {
+      this.animationFrame = null
       this.reconcile()
     })
   }
