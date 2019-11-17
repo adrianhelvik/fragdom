@@ -132,6 +132,7 @@ class Element extends Node {
       const child = this.childNodes[i].realNode
 
       if (Array.isArray(child)) {
+        let childCount = 0
         for (const c of child) {
           if (realNode.childNodes[index] !== c) {
             if (realNode.childNodes[index]) {
@@ -141,21 +142,31 @@ class Element extends Node {
             }
           }
           index += 1
+          childCount += 1
         }
       } else {
-        if (realNode.childNodes[i] !== child) {
-          if (realNode.childNodes[i]) {
-            realNode.replaceChild(child, realNode.childNodes[i])
+        if (realNode.childNodes[index] !== child) {
+          if (realNode.childNodes[index]) {
+            realNode.replaceChild(child, realNode.childNodes[index])
+            index += 1
           } else {
             realNode.appendChild(child)
+            index += 1
           }
+        } else {
+          index += 1
         }
-        index += 1
       }
     }
 
-    for (let i = realNode.childNodes.length - 1; i >= 0 && i >= index; i--) {
-      realNode.removeChild(realNode.childNodes[i])
+    const toRemove = []
+
+    for (let i = index; i < realNode.childNodes.length; i++) {
+      toRemove.push(realNode.childNodes[i])
+    }
+
+    for (const node of toRemove) {
+      realNode.removeChild(node)
     }
 
     this.setRealNodeAfterReconciliation(realNode)

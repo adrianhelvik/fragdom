@@ -95,27 +95,6 @@ describe('reconcile', () => {
 
     expect(container.innerHTML).toBe('<h1>Hello world</h1>Foo bar<b>Baz</b>')
   })
-
-  test('bugfix', () => {
-    const root = <div />
-
-    root.reconcile()
-
-    root.appendChild(
-      <div>
-        {'done'}
-        <input />
-      </div>,
-    )
-
-    root.reconcile()
-
-    root.childNodes[0].replaceChild(<></>, root.childNodes[0].childNodes[0])
-
-    root.reconcile()
-
-    expect(root.realNode.innerHTML).toBe('<div><input></div>')
-  })
 })
 
 describe('reconcileAsync', () => {

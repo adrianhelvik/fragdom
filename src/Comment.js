@@ -8,6 +8,10 @@ class Comment extends Node {
     this.setRealNodeAfterReconciliation(realNode)
   }
 
+  debug() {
+    return '#comment'
+  }
+
   reconcile() {
     cancelAnimationFrame(this.#raf)
 

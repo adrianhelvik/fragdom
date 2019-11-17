@@ -25,9 +25,12 @@ class Fragment extends Node {
   }
 
   debug() {
-    return ['<>', ...this.childNodes.map(x => indent(x.debug())), '</>'].join(
-      this.childNodes.length ? '\n' : '',
-    )
+    return [
+      /**********************/
+      '<>',
+      ...this.childNodes.map(x => indent(x.debug())),
+      '</>',
+    ].join(this.childNodes.length ? '\n' : '')
   }
 
   reconcile(isContinuation) {

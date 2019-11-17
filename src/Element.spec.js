@@ -344,3 +344,28 @@ describe('.replaceChild(newChild, oldChild)', () => {
     expect(root.realNode.innerHTML).toBe('1Hello2')
   })
 })
+
+test('bugfix: Element containing fragment that shrunk in size', () => {
+  const root = <div />
+
+  root.reconcile()
+
+  root.appendChild(
+    <div>
+      {'done'}
+      <input />
+    </div>,
+  )
+
+  root.reconcile()
+
+  expect(root.realNode.innerHTML).toBe('<div>done<input></div>')
+
+  root.childNodes[0].replaceChild(<></>, root.childNodes[0].childNodes[0])
+
+  window.DEBUG_FRAGDOM_ELEMENT = true
+
+  root.reconcile()
+
+  expect(root.realNode.innerHTML).toBe('<div><input></div>')
+})
